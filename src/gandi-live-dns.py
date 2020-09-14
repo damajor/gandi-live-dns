@@ -129,33 +129,34 @@ def main(force_update, verbosity, repeat):
     uuid = get_uuid()
 
     #compare dynIP and DNS IP
-    dynIP = get_dynip(config.ifconfig, verbose)
+    for ifconfig in config.ifconfig:
+        dynIP = get_dynip(ifconfig, verbose)
 
-    if check_is_ipv6(dynIP, verbose):
-        subdomains = config.subdomains6
-        is_ipv6 = True
-        print('Detected ipv6')
-    else:
-        print('Detected ipv4')
-        is_ipv6 = False
-        subdomains = config.subdomains
-
-    dnsIP = get_dnsip(uuid, is_ipv6, verbose)
-
-    if force_update:
-        print ('Going to update/create the DNS Records for the subdomains')
-        for sub in subdomains:
-            update_records(uuid, dynIP, sub, is_ipv6, verbose)
-    else:
-        if verbose:
-            print(f'dynIP: {dynIP}')
-            print(f'dnsIP: {dnsIP}')
-        if dynIP == dnsIP:
-            print ('IP Address Match - no further action')
+        if check_is_ipv6(dynIP, verbose):
+            subdomains = config.subdomains6
+            is_ipv6 = True
+            print('Detected ipv6')
         else:
-            print (f'IP Address Mismatch - going to update the DNS Records for the subdomains with new IP {dynIP}')
+            print('Detected ipv4')
+            is_ipv6 = False
+            subdomains = config.subdomains
+
+        dnsIP = get_dnsip(uuid, is_ipv6, verbose)
+
+        if force_update:
+            print ('Going to update/create the DNS Records for the subdomains')
             for sub in subdomains:
                 update_records(uuid, dynIP, sub, is_ipv6, verbose)
+        else:
+            if verbose:
+                print(f'dynIP: {dynIP}')
+                print(f'dnsIP: {dnsIP}')
+            if dynIP == dnsIP:
+                print ('IP Address Match - no further action')
+            else:
+                print (f'IP Address Mismatch - going to update the DNS Records for the subdomains with new IP {dynIP}')
+                for sub in subdomains:
+                    update_records(uuid, dynIP, sub, is_ipv6, verbose)
     if repeat:
         if verbosity:
             print(f'Repeating in {repeat} seconds')

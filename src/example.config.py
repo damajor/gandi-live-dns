@@ -25,6 +25,7 @@ domain = 'mydomain.tld'
 
 #enter all subdomains to be updated, subdomains must already exist to be updated
 subdomains = ["subdomain1", "subdomain2", "subdomain3"]
+subdomains6 = ["subdomain1", "subdomain2", "subdomain3"]
 
 #300 seconds = 5 minutes
 ttl = '300'
@@ -42,4 +43,4 @@ e.g.
 + http://ipinfo.io/ip
 + many more ...
 '''
-ifconfig = 'choose_from_above_or_run_your_own'
+ifconfig = ['choose_from_above_or_run_your_own', 'choose_more_from_above_or_run_your_own']
